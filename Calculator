@@ -1,0 +1,59 @@
+function calculateNetSalary(basicSalary, benefits) {
+  const kra = {
+    lowerLimit: 0,
+    upperLimit: 12298,
+    rate: 0.1,
+    offset: 0
+  };
+  const nhif = {
+    lowerLimit: 0,
+    upperLimit: 6000,
+    rate: 0.015
+  };
+  const nssf = {
+    lowerLimit: 0,
+    upperLimit: 18000,
+    employeeRate: 0.06,
+    employerRate: 0.06
+  };
+  
+  // Calculate gross salary
+  const grossSalary = basicSalary + benefits;
+  
+  // Calculate payee (tax)
+  let payee = 0;
+  if (grossSalary > kra.upperLimit) {
+    payee = (kra.upperLimit - kra.lowerLimit) * kra.rate + kra.offset + (grossSalary - kra.upperLimit) * (2 * kra.rate);
+  } else if (grossSalary > kra.lowerLimit) {
+    payee = (grossSalary - kra.lowerLimit) * kra.rate + kra.offset;
+  }
+  
+  // Calculate NHIF deductions
+  let nhifDeductions = 0;
+  if (grossSalary > nhif.upperLimit) {
+    nhifDeductions = nhif.rate * nhif.upperLimit;
+  } else if (grossSalary > nhif.lowerLimit) {
+    nhifDeductions = nhif.rate * grossSalary;
+  }
+  
+  // Calculate NSSF deductions
+  let nssfDeductions = 0;
+  if (grossSalary <= nssf.upperLimit) {
+    nssfDeductions = nssf.employeeRate * grossSalary + nssf.employerRate * grossSalary;
+  } else {
+    nssfDeductions = nssf.employeeRate * nssf.upperLimit + nssf.employerRate * nssf.upperLimit;
+  }
+  
+  // Calculate net salary
+  const netSalary = grossSalary - payee - nhifDeductions - nssfDeductions;
+  
+  // Return results
+  return {
+    grossSalary,
+    payee,
+    nhifDeductions,
+    nssfDeductions,
+    netSalary
+  };
+}
+
