@@ -12,6 +12,6 @@ function steps(n) {
   }
 }
 
-// Example usage
+// Example
 steps(2);
 steps(3);
